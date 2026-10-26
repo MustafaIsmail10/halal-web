@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      width: 200px;
+      margin: 0;
+      padding: 12px;
+      font-family: sans-serif;
+      font-size: 14px;
+    }
+
+    /* One row: text on the left, switch on the right */
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+    }
+
+    /* The switch is a real checkbox, hidden, with a styled track and knob */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 40px;
+      height: 22px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background-color: #ccc;
+      border-radius: 22px;
+      transition: background-color 0.2s;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      left: 3px;
+      top: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: transform 0.2s;
+    }
+
+    .switch input:checked+.slider {
+      background-color: #333;
+    }
+
+    .switch input:checked+.slider::before {
+      transform: translateX(18px);
+    }
+
+    .switch input:focus-visible+.slider {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+    }
+
+    .switch input:disabled+.slider {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #message {
+      margin: 8px 0 0;
+      font-size: 12px;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+  <label class="row">
+    <span>Grayscale</span>
+    <span class="switch">
+      <input type="checkbox" id="grayscaleToggle" checked>
+      <span class="slider"></span>
+    </span>
+  </label>
+  <p id="message" hidden></p>
+  <script src="scripts/popup.js"></script>
+</body>
+
+</html>
