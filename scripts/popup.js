@@ -5,9 +5,6 @@ document.getElementById('toggleBtn').addEventListener('click', async () => {
     target: { tabId: tab.id },
     func: toggleGrayscale
   });
-
-  document.documentElement.style.filter = 'grayscale(100%)';
-
 });
 
 function toggleGrayscale() {
