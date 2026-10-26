@@ -1,3 +1,4 @@
-html:not([data-halal-web-color]) {
+html:not([data-halal-web-color]),
+html:not([data-halal-web-color]) :fullscreen {
   filter: grayscale(100%) !important;
 }

@@ -4,11 +4,20 @@
 <head>
   <style>
     body {
-      width: 200px;
+      width: 220px;
       margin: 0;
-      padding: 12px;
+      padding: 10px;
+      background-color: #f0f0f0;
       font-family: sans-serif;
       font-size: 14px;
+    }
+
+    /* White card with rounded corners that holds the popup's content */
+    .card {
+      padding: 12px 14px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     }
 
     /* One row: text on the left, switch on the right */
@@ -80,14 +89,16 @@
 </head>
 
 <body>
-  <label class="row">
-    <span>Grayscale</span>
-    <span class="switch">
-      <input type="checkbox" id="grayscaleToggle" checked>
-      <span class="slider"></span>
-    </span>
-  </label>
-  <p id="message" hidden></p>
+  <div class="card">
+    <label class="row">
+      <span>Grayscale</span>
+      <span class="switch">
+        <input type="checkbox" id="grayscaleToggle" checked>
+        <span class="slider"></span>
+      </span>
+    </label>
+    <p id="message" hidden></p>
+  </div>
   <script src="scripts/popup.js"></script>
 </body>
 
