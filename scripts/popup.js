@@ -1,22 +1,24 @@
 document.getElementById('toggleBtn').addEventListener('click', async () => {
+  
+  const button = document.getElementById('toggleBtn');
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
   
-  chrome.scripting.executeScript({
-    target: { tabId: tab.id },
-    func: toggleGrayscale
-  });
+  try {
+    await chrome.scripting.executeScript({
+      target: { tabId: tab.id },
+      func: toggleGrayscale
+    });   
+  } catch (error) {
+    button.textContent = 'Error toggling grayscale';
+    button.disabled = true;
+  }
 });
 
 function toggleGrayscale() {
-  console.log('Toggling grayscale mode...');
-  const currentFilter = document.documentElement.style.filter;
-  if (currentFilter.includes('grayscale(100%)')) {
-    document.documentElement.style.filter = '';
+  const root = document.documentElement;
+  if (root.hasAttribute('data-halal-web-color')) {
+    root.removeAttribute('data-halal-web-color');
   } else {
-    document.documentElement.style.filter = 'grayscale(100%)';
+    root.setAttribute('data-halal-web-color', '');
   }
-
-  console.log('Grayscale mode toggled.');
 }
-
-console.log("This is a popup!")

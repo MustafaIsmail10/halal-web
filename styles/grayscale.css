@@ -1,0 +1,3 @@
+html:not([data-halal-web-color]) {
+  filter: grayscale(100%) !important;
+}
