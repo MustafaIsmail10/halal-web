@@ -22,15 +22,10 @@
   "content_scripts": [
     {
       "css": ["styles/grayscale.css"],
-      "matches": [
-        "https://*/*",
-        "http://*/*"
-      ],
+      "js": ["scripts/content.js"],
+      "matches": ["https://*/*", "http://*/*"],
       "run_at": "document_start"
     }
   ],
-  "permissions": [
-    "activeTab",
-    "scripting"
-  ]
+  "permissions": ["activeTab", "scripting", "storage"]
 }

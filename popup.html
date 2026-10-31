@@ -80,6 +80,50 @@
       cursor: not-allowed;
     }
 
+    /* Two buttons side by side: Gray | Vintage. Each is a hidden radio
+       button with a styled text label, like the switch above. */
+    .themes {
+      display: flex;
+      margin-top: 12px;
+      padding: 2px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+    }
+
+    .themes label {
+      position: relative;
+      flex: 1;
+      cursor: pointer;
+    }
+
+    .themes input {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .themes span {
+      display: block;
+      padding: 4px 0;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .themes input:checked+span {
+      background-color: #fff;
+      color: #000;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .themes input:focus-visible+span {
+      outline: 2px solid #4a90e2;
+      outline-offset: 1px;
+    }
+
+
     #message {
       margin: 8px 0 0;
       font-size: 12px;
@@ -91,12 +135,22 @@
 <body>
   <div class="card">
     <label class="row">
-      <span>Grayscale</span>
+      <span>Filter</span>
       <span class="switch">
         <input type="checkbox" id="grayscaleToggle" checked>
         <span class="slider"></span>
       </span>
     </label>
+    <div class="themes" role="radiogroup" aria-label="Theme">
+      <label>
+        <input type="radio" name="theme" value="gray" checked>
+        <span>Gray</span>
+      </label>
+      <label>
+        <input type="radio" name="theme" value="vintage">
+        <span>Vintage</span>
+      </label>
+    </div>
     <p id="message" hidden></p>
   </div>
   <script src="scripts/popup.js"></script>

@@ -1,7 +1,9 @@
 const toggle = document.getElementById('grayscaleToggle');
 const message = document.getElementById('message');
+const themeInputs = document.querySelectorAll('input[name="theme"]');
 
 init();
+initTheme();
 
 async function init() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -32,6 +34,21 @@ async function init() {
     }
   });
 }
+
+async function initTheme() {
+  // Select the saved theme, or gray if nothing is saved yet.
+  const { theme = 'gray' } = await chrome.storage.sync.get('theme');
+
+  for (const input of themeInputs) {
+    input.checked = input.value === theme;
+
+    // Saving is enough: scripts/content.js in every open page sees the change.
+    input.addEventListener('change', () => {
+      chrome.storage.sync.set({ theme: input.value });
+    });
+  }
+}
+
 
 function showError(text) {
   toggle.disabled = true;

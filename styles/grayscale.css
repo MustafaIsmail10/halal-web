@@ -1,4 +1,15 @@
+/* The filter for each theme. Gray is the default. scripts/content.js sets
+   data-halal-web-theme on <html> when another theme is saved. */
+html {
+  --halal-web-filter: grayscale(100%) contrast(120%);
+}
+
+html[data-halal-web-theme="vintage"] {
+  --halal-web-filter: grayscale(100%) sepia(60%) contrast(120%);
+}
+
+/* Apply the filter, unless the popup switched this page to full color. */
 html:not([data-halal-web-color]),
 html:not([data-halal-web-color]) :fullscreen {
-  filter: grayscale(100%) !important;
+  filter: var(--halal-web-filter) !important;
 }
