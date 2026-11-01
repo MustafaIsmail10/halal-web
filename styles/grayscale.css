@@ -1,17 +1,17 @@
 /* The filter for each theme. Gray is the default. scripts/content.js sets
    data-halal-web-theme on <html> when another theme is saved. */
 html {
-  --halal-web-filter: grayscale(100%) contrast(120%);
+  --halal-web-filter: grayscale(100%) contrast(110%);
 }
 
 html[data-halal-web-theme="vintage"] {
-  --halal-web-filter: grayscale(100%) sepia(60%) contrast(120%);
+  --halal-web-filter: grayscale(100%) sepia(60%) contrast(110%);
 }
 
-/* Vin: keeps the page's colors but makes them calmer. sepia() warms every
+/* Calm: keeps the page's colors but makes them calmer. sepia() warms every
    color toward one shared tone and saturate() fades them. Images and videos
    are inside <html>, so they get the same look. */
-html[data-halal-web-theme="vin"] {
+html[data-halal-web-theme="calm"] {
   --halal-web-filter: sepia(35%) saturate(60%) brightness(95%) contrast(90%);
 }
 
