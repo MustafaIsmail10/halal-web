@@ -28,3 +28,13 @@ html:not([data-halal-web-color]) :fullscreen {
 html:not([data-halal-web-color])::view-transition {
   filter: var(--halal-web-filter) !important;
 }
+
+/* Dialogs opened with showModal() and open popovers are drawn in the top
+   layer, like fullscreen elements, so the filter on <html> doesn't reach
+   them. ::backdrop is the shade drawn behind them, also in the top layer.
+   Dialogs opened with show() stay inside the page and are already
+   filtered, so :modal leaves them out. */
+html:not([data-halal-web-color]) :is(dialog:modal, :popover-open),
+html:not([data-halal-web-color]) :is(dialog:modal, :popover-open)::backdrop {
+  filter: var(--halal-web-filter) !important;
+}
