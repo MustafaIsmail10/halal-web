@@ -20,3 +20,11 @@ html:not([data-halal-web-color]),
 html:not([data-halal-web-color]) :fullscreen {
   filter: var(--halal-web-filter) !important;
 }
+
+/* Some sites animate changes with the View Transitions API. YouTube does
+   it for theater mode. During the animation Chrome shows snapshots of the
+   page in ::view-transition, a layer drawn above the page that the filter
+   on <html> doesn't reach. Give that layer the same filter. */
+html:not([data-halal-web-color])::view-transition {
+  filter: var(--halal-web-filter) !important;
+}
