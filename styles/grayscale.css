@@ -8,6 +8,13 @@ html[data-halal-web-theme="vintage"] {
   --halal-web-filter: grayscale(100%) sepia(60%) contrast(120%);
 }
 
+/* Vin: keeps the page's colors but makes them calmer. sepia() warms every
+   color toward one shared tone and saturate() fades them. Images and videos
+   are inside <html>, so they get the same look. */
+html[data-halal-web-theme="vin"] {
+  --halal-web-filter: sepia(35%) saturate(60%) brightness(95%) contrast(90%);
+}
+
 /* Apply the filter, unless the popup switched this page to full color. */
 html:not([data-halal-web-color]),
 html:not([data-halal-web-color]) :fullscreen {
