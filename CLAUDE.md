@@ -22,20 +22,27 @@ Halal Web is a Chrome extension (Manifest V3) meant to reduce browsing distracti
 
 1. Open `chrome://extensions` and enable **Developer mode**.
 2. Click **Load unpacked** and select the repository root (the folder containing `manifest.json`).
-3. After editing files, click the extension's reload icon on `chrome://extensions`. A change to `popup.html` or `scripts/popup.js` shows up the next time the popup is opened. A change to `manifest.json` or `styles/grayscale.css` needs the extension reload, then a reload of the target tab.
+3. After editing files, click the extension's reload icon on `chrome://extensions`. A change to `popup.html` or `scripts/popup.js` shows up the next time the popup is opened. A change to `manifest.json`, `scripts/content.js` or `styles/grayscale.css` needs the extension reload, then a reload of the target tab.
 
-Tabs that were open before the extension was loaded or reloaded only pick up the grayscale CSS after a page reload. In such a tab the popup switch can show "on" while the page is in color, because the switch reads the page's attribute, not the filter that is actually applied.
+Tabs that were open before the extension was loaded or reloaded only pick up the content script and its CSS after a page reload. In such a tab the popup switch can show "on" while the page is in color, because the switch reads the page's attribute, not the filter that is actually applied.
 
 To debug the popup, right-click the extension icon and choose **Inspect popup**. Code injected into a page logs to that page's own DevTools console.
 
 ## Architecture
 
-- `manifest.json`: entry point. Declares the popup (`action.default_popup` → `popup.html`), a content script that injects `styles/grayscale.css` into every `http`/`https` page at `document_start`, and the `activeTab` + `scripting` permissions.
-- `styles/grayscale.css`: grays the page with `html:not([data-halal-web-color]) { filter: grayscale(100%) !important; }`. Pages are gray by default. The `data-halal-web-color` attribute on `<html>` is the only on/off state: when it is present the page is in color. Nothing is saved, so a page reload removes the attribute and the page is gray again.
-- `popup.html` + `scripts/popup.js`: the popup. One row with the text "Grayscale" and a switch (a hidden checkbox `#grayscaleToggle` styled as a track and knob).
+- `manifest.json`: entry point. Declares the popup (`action.default_popup` → `popup.html`), a content script (`styles/grayscale.css` + `scripts/content.js`) that runs in the top frame of every `http`/`https` page at `document_start`, and the `activeTab` + `scripting` + `storage` permissions. `<html>` already exists at `document_start`, so the script can use `document.documentElement` right away.
+- `styles/grayscale.css`:
+  - Themes: `--halal-web-filter` on `html` holds the filter. Gray is the default; `html[data-halal-web-theme="vintage"]` and `="calm"` swap it.
+  - The filter is applied to `html`, `:fullscreen`, `::view-transition`, and modal dialogs and popovers (plus their `::backdrop`), because the top layer is not reached by the filter on `<html>`. All of it is skipped while `<html>` has `data-halal-web-color`. That attribute is the per-page on/off state: present means color. Nothing is saved, so a page reload removes it and the page is filtered again.
+  - Styles for the warning screen (`#halal-web-warning`). It is a modal dialog, so the theme filter applies to it too; its colors must stay readable after graying. Page scrolling is locked with `html:has(#halal-web-warning[open])`.
+- `scripts/content.js`:
+  - `applyTheme` reads `theme` from `chrome.storage.sync` and sets or removes `data-halal-web-theme` on `<html>`. It listens to `chrome.storage.onChanged` so a theme picked in the popup reaches every open page.
+  - `showWarning` puts a modal `<dialog id="halal-web-warning">` ("Do not open unless critical." + an "Open Critical" button) on every page load. The button removes it. Escape is blocked at `keydown`, because Chrome ignores `preventDefault()` on the dialog's `cancel` event until the user has clicked the page. Media that starts playing while the warning is open is paused.
+- `popup.html` + `scripts/popup.js`: the popup. One row with the text "Filter" and a switch (a hidden checkbox `#grayscaleToggle` styled as a track and knob), then three theme buttons (radio inputs named `theme`: gray, vintage, calm).
   - When the popup opens, `init()` gets the active tab and runs `isGrayscaleOn` in it with `chrome.scripting.executeScript`. The return value (`results[0].result`) sets the switch.
   - On the switch's `change` event, it runs `setGrayscale` in the tab with `args: [toggle.checked]`, which adds or removes `data-halal-web-color`.
   - If the page doesn't allow extension scripts (`chrome://` pages, the Chrome Web Store), `executeScript` throws. `showError` then disables the switch and shows a message in `#message`.
+  - `initTheme()` selects the saved theme's button and saves a new pick to `chrome.storage.sync`. The content script does the rest.
 - `popup/` is an empty directory.
 - `How_to_publish.md`: Chrome Web Store publishing steps. Its `zip` command lists every file and directory that ships, so a new file the extension needs must also be added there.
 
@@ -47,3 +54,4 @@ The README describes behavior that is not built yet. Check it before assuming a 
 
 - **Site blocking** is described but not implemented.
 - **GrayScale mode** matches the README: on by default for every page, turned off per page from the popup, and back on after a page reload.
+- **Themes** (Gray, Vintage, Calm) and the **warning screen** are built but not in the README.
