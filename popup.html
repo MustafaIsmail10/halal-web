@@ -123,6 +123,10 @@
       outline-offset: 1px;
     }
 
+    /* Space between the theme buttons and the Warning row */
+    .themes+.row {
+      margin-top: 12px;
+    }
 
     #message {
       margin: 8px 0 0;
@@ -155,6 +159,13 @@
         <span>Calm</span>
       </label>
     </div>
+    <label class="row">
+      <span>Warning</span>
+      <span class="switch">
+        <input type="checkbox" id="warningToggle" checked>
+        <span class="slider"></span>
+      </span>
+    </label>
     <p id="message" hidden></p>
   </div>
   <script src="scripts/popup.js"></script>

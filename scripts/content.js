@@ -16,11 +16,11 @@ function showWarning() {
 
   const heading = document.createElement('h1');
   heading.id = 'halal-web-warning-title';
-  heading.textContent = 'Do not open unless critical.';
+  heading.textContent = 'CALM DOWN!';
 
   const button = document.createElement('button');
   button.type = 'button';
-  button.textContent = 'Open Critical';
+  button.textContent = 'Open';
   button.autofocus = true;
 
   dialog.append(heading, button);
@@ -43,6 +43,12 @@ function showWarning() {
 
 showWarning();
 
+// Ask scripts/background.js whether the popup turned the warning off for this tab.
+// The warning is already up, so the page never shows before the answer arrives.
+chrome.runtime.sendMessage('isWarningOff').then((off) => {
+  if (off) document.getElementById('halal-web-warning')?.remove();
+});
+
 chrome.storage.sync.get('theme').then(({ theme }) => applyTheme(theme));
 
 // Apply theme changes from the popup to this page and its warning.
@@ -51,3 +57,4 @@ chrome.storage.onChanged.addListener((changes, area) => {
     applyTheme(changes.theme.newValue);
   }
 });
+

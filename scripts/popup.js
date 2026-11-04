@@ -1,9 +1,11 @@
 const toggle = document.getElementById('grayscaleToggle');
 const message = document.getElementById('message');
 const themeInputs = document.querySelectorAll('input[name="theme"]');
+const warningToggle = document.getElementById('warningToggle');
 
 init();
 initTheme();
+initWarning();
 
 async function init() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
@@ -47,6 +49,29 @@ async function initTheme() {
       chrome.storage.sync.set({ theme: input.value });
     });
   }
+}
+
+async function initWarning() {
+  const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+  // Same key as scripts/background.js. storage.session lives in memory and is cleared when Chrome closes.
+  const key = `warningOff:${tab.id}`;
+  const items = await chrome.storage.session.get(key);
+  warningToggle.checked = !items[key];
+
+  warningToggle.addEventListener('change', () => {
+    if (warningToggle.checked) {
+      // Takes effect on the next page load in this tab.
+      chrome.storage.session.remove(key);
+    } else {
+      chrome.storage.session.set({ [key]: true });
+      // Also close the warning on screen now. chrome:// pages have no warning and refuse scripts.
+      chrome.scripting.executeScript({
+        target: { tabId: tab.id },
+        func: () => document.getElementById('halal-web-warning')?.remove()
+      }).catch(() => {});
+    }
+  });
 }
 
 
