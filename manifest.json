@@ -30,5 +30,17 @@
       "run_at": "document_start"
     }
   ],
-  "permissions": ["activeTab", "scripting", "storage"]
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "declarativeNetRequestWithHostAccess"
+  ],
+  "host_permissions": ["https://*/*", "http://*/*"],
+  "web_accessible_resources": [
+    {
+      "resources": ["slowdown.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }
